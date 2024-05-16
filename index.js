@@ -5,11 +5,12 @@ require('dotenv').config();
 const postRoutes = require('./post/route');
 const connectToMongoDb = require('./utils/mongoDbConnection');
 const uploadMiddleware = require('./utils/uploadImage');
+connectToMongoDb();
 const app = express();
 
 app.use(bodyParser.json());
 
-connectToMongoDb();
+
 
 
 
