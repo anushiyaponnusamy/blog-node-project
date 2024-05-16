@@ -14,6 +14,7 @@ connectToMongoDb();
 
 
 app.get("/", (req, res, next) => res.status(200).json({ root: "ok" }));
+
 app.post('/uploadImage', uploadMiddleware, (req, res) => {
     const imageUrl = req.imageUrl;
 
