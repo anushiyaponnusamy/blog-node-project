@@ -5,9 +5,9 @@ const path = require('path');
 require('dotenv').config();
 
 cloudinary.config({
-  cloud_name: 'ddaf8ftoj',
-  api_key: '576789522748994',
-  api_secret: '9G4HAkps8MsWp9FYa57nUo-aPJw'
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 // Multer configuration for file upload
 const storage = multer.memoryStorage(); // Store the file in memory
