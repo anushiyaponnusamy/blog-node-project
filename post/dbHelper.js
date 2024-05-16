@@ -27,11 +27,7 @@ dbHelper.createPost = async (title, desc, image, tags) => {
 dbHelper.getAllPosts = async (req) => {
     try {
         const { sort, page, limit, keyword, tag } = req.query;
-        const validParams = ['sort', 'page', 'limit', 'keyword', 'tag'];
-        const invalidParams = Object.keys(req.query).filter(param => !validParams.includes(param));
-        if (invalidParams.length > 0) {
-            return res.status(400).json({ error: `Invalid parameter(s): ${invalidParams.join(', ')}` });
-        }
+
 
         const query = {};
         if (keyword) {
