@@ -9,8 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Multer configuration for file upload
-const storage = multer.memoryStorage(); // Store the file in memory
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const uploadMiddleware = async (req, res, next) => {
@@ -32,17 +31,15 @@ const uploadMiddleware = async (req, res, next) => {
       return res.status(400).json({ error: 'Missing file in the request' });
     }
 
-    // Convert file buffer to base64 string
     const base64 = req.file.buffer.toString('base64');
     const dataUri = `data:${req.file.mimetype};base64,${base64}`;
 
-    // Upload file to Cloudinary
+
     const result = await cloudinary.uploader.upload(dataUri, {
-      resource_type: 'auto', // 'auto' detects the file type
-      public_id: path.parse(req.file.originalname).name // Set your desired filename here
+      resource_type: 'auto',
+      public_id: path.parse(req.file.originalname).name
     });
 
-    // Attach the Cloudinary URL to the request object
     req.imageUrl = result.secure_url;
     next();
   } catch (error) {

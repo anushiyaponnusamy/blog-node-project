@@ -37,6 +37,7 @@ dbHelper.getAllPosts = async (req) => {
 
 
         const query = {};
+
         if (keyword) {
             query.$or = [
                 { title: { $regex: keyword, $options: 'i' } },
@@ -50,7 +51,7 @@ dbHelper.getAllPosts = async (req) => {
                 query.tags = tagDoc._id;
             }
         }
-        if (!query.tags || !query.$or) {
+        if (!query.tags || !keyword) {
             return {
                 data: [], message: "posts retrieved based on filters, sort and pagination"
             }
