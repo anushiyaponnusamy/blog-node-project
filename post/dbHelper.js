@@ -3,7 +3,9 @@ const PostSchema = require('./post_model');
 const TagSchema = require('./tag_model');
 const dbHelper = {}
 
-dbHelper.createPost = async (title, desc, image, tags) => {
+dbHelper.createPost = async (title, desc,
+    image,
+    tags) => {
     try {
         let tagIds;
         if (tags)
@@ -17,8 +19,13 @@ dbHelper.createPost = async (title, desc, image, tags) => {
             }) : []);
 
 
-        const obj = new PostSchema({ title, desc, image, tags: tagIds });
+        const obj = new PostSchema({
+            title, desc,
+            image,
+            tags: tagIds
+        });
         return await obj.save();
+
     } catch (error) {
         return Promise.reject(error)
     }
@@ -37,18 +44,18 @@ dbHelper.getAllPosts = async (req) => {
             ];
         }
         if (tag) {
-            const tagDoc = await TagSchema.findOne({ name: { $regex: new RegExp(tag, 'i') } }).select('_id');
+            const tagDoc = await TagSchema.findOne({ name: tag }).collation({ locale: 'en', strength: 2 }).select('_id');
 
-            if (!tagDoc) {
-                throw new Error(`Tag not found with name: ${tag}`);
+            if (tagDoc) {
+                query.tags = tagDoc._id;
             }
-            query.tags = tagDoc?._id;
         }
-        return await PostSchema.find(query)
-            .sort(sort || '-createdAt')
-            .skip((parseInt(page) - 1) * parseInt(limit))
-            .limit(parseInt(limit));
-
+        if (query.tags || query.$or)
+            return await PostSchema.find(query)
+                .sort(sort || '-createdAt')
+                .skip((parseInt(page) - 1) * parseInt(limit))
+                .limit(parseInt(limit));
+        return []
 
     } catch (error) {
 

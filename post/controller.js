@@ -3,9 +3,10 @@ const dbHelper = require('./dbHelper');
 const controller = {}
 controller.createPost = async (req) => {
     try {
-        if (!req.body.title && !req.body.desc && !req.imageUrl && !req.body.tags) return 'field required';
+        if (!req.body.title && !req.body.desc && !req.imageUrl && !req.body.tags) return Promise.reject('field required')
         return dbHelper.createPost(req.body.title, req.body.desc, req.imageUrl, req.body.tags);
     } catch (error) {
+        console.log(error)
         return Promise.reject(error)
     }
 }
@@ -19,6 +20,7 @@ controller.getAllPosts = async (req) => {
         return dbHelper.getAllPosts(req);
 
     } catch (error) {
+
         return Promise.reject(error)
     }
 }

@@ -4,11 +4,13 @@ const uploadMiddleware = require('../utils/uploadImage');
 
 const router = express.Router();
 
-router.post('/createPost', uploadMiddleware, (req, res, next) =>
-    controller
-        .createPost(req)
-        .then((data) => res.status(201).send({ data, message: "new post created successfully", status: 201 }))
-        .catch((err) => next(err))
+router.post('/createPost',
+    uploadMiddleware,
+    (req, res, next) =>
+        controller
+            .createPost(req)
+            .then((data) => res.status(201).send({ data, message: "new post created successfully", status: 201 }))
+            .catch((err) => next(err))
 );
 
 
