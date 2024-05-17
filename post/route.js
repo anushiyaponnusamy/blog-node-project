@@ -5,7 +5,7 @@ const ErrorUtils = require('../utils/errorUtils');
 const ResponseFormatter = require('../utils/responseFormatter');
 
 const router = express.Router();
-
+//inserting post along with image
 router.post('/createPost',
     uploadMiddleware,
     async (req, res, next) => {
