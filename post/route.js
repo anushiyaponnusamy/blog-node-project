@@ -1,24 +1,57 @@
 const express = require('express');
 const controller = require('./controller');
 const uploadMiddleware = require('../utils/uploadImage');
+const ErrorUtils = require('../utils/errorUtils');
+const ResponseFormatter = require('../utils/responseFormatter');
 
 const router = express.Router();
 
 router.post('/createPost',
     uploadMiddleware,
-    (req, res, next) =>
-        controller
-            .createPost(req)
-            .then((data) => res.status(201).send({ data, message: "new post created successfully", status: 201 }))
-            .catch((err) => next(err))
+    async (req, res, next) => {
+
+        try {
+
+            const { message, data, status, error } = await controller.createPost(req);
+
+
+            if (error) {
+                const { error, status } = ErrorUtils.mapError(err);
+                return ResponseFormatter.formatResponse(res, error, status);
+            } else {
+                return ResponseFormatter.formatResponse(res, message, 201, data);
+            }
+        }
+        catch (err) {
+
+            const { error, status } = ErrorUtils.mapError(err);
+            return ResponseFormatter.formatResponse(res, error, status);
+        }
+    }
 );
 
 
-router.get('/getAllPosts', (req, res, next) =>
-    controller
-        .getAllPosts(req)
-        .then((data) => res.status(200).send({ data, message: "posts retrieved based on filters , sort and pagination", status: 200 }))
-        .catch((err) => next(err))
+router.get('/getAllPosts',
+    async (req, res, next) => {
+
+        try {
+
+            const { message, data, status, error } = await controller.getAllPosts(req);
+
+
+            if (error) {
+                const { error, status } = ErrorUtils.mapError(err);
+                return ResponseFormatter.formatResponse(res, error, status);
+            } else {
+                return ResponseFormatter.formatResponse(res, message, status, data);
+            }
+        }
+        catch (err) {
+
+            const { error, status } = ErrorUtils.mapError(err);
+            return ResponseFormatter.formatResponse(res, error, status);
+        }
+    }
 );
 
 module.exports = router;

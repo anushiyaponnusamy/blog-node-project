@@ -3,11 +3,13 @@ const dbHelper = require('./dbHelper');
 const controller = {}
 controller.createPost = async (req) => {
     try {
-        if (!req.body.title && !req.body.desc && !req.imageUrl && !req.body.tags) return Promise.reject('field required')
+        if (!req.body.title || !req.body.desc || !req.imageUrl || !req.body.tags) {
+
+            throw new Error("Bad Request: Missing request body");
+        }
         return dbHelper.createPost(req.body.title, req.body.desc, req.imageUrl, req.body.tags);
     } catch (error) {
-        console.log(error)
-        return Promise.reject(error)
+        throw error
     }
 }
 controller.getAllPosts = async (req) => {
@@ -15,13 +17,12 @@ controller.getAllPosts = async (req) => {
         const validParams = ['sort', 'page', 'limit', 'keyword', 'tag'];
         const invalidParams = Object.keys(req.query).filter(param => !validParams.includes(param));
         if (invalidParams.length > 0) {
-            return res.status(400).json({ error: `Invalid parameter(s): ${invalidParams.join(', ')}` });
+            throw new Error("Invalid parameter");
         }
         return dbHelper.getAllPosts(req);
 
     } catch (error) {
-
-        return Promise.reject(error)
+        throw error
     }
 }
 module.exports = controller;

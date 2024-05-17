@@ -24,10 +24,10 @@ dbHelper.createPost = async (title, desc,
             image,
             tags: tagIds
         });
-        return await obj.save();
+        return { data: await obj.save(), message: "new post created successfully" }
 
     } catch (error) {
-        return Promise.reject(error)
+        throw error
     }
 }
 
@@ -50,16 +50,23 @@ dbHelper.getAllPosts = async (req) => {
                 query.tags = tagDoc._id;
             }
         }
-        if (query.tags || query.$or)
-            return await PostSchema.find(query)
-                .sort(sort || '-createdAt')
-                .skip((parseInt(page) - 1) * parseInt(limit))
-                .limit(parseInt(limit));
-        return []
+        if (!query.tags || !query.$or) {
+            return {
+                data: [], message: "posts retrieved based on filters, sort and pagination"
+            }
+        }
 
+        const data = await PostSchema.find(query)
+            .sort(sort || '-createdAt')
+            .skip((parseInt(page) - 1) * parseInt(limit))
+            .limit(parseInt(limit));
+
+        return {
+            data, message: "posts retrieved based on filters, sort and pagination"
+        }
     } catch (error) {
 
-        return Promise.reject(error)
+        throw error
     }
 }
 
