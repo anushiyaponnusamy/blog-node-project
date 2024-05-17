@@ -37,8 +37,6 @@ dbHelper.getAllPosts = async (req) => {
 
 
         const query = {};
-        console.log
-            (keyword)
         if (keyword) {
             query.$or = [
                 { title: { $regex: keyword, $options: 'i' } },
