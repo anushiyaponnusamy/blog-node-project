@@ -38,7 +38,7 @@ const uploadMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.error('Error uploading image:', error);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: error.message });
   }
 };
 
